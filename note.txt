@@ -1,0 +1,41 @@
+* Thống nhất quy chuẩn đặt tên:
+    - Tên bảng được viết bằng UpperCamelCase, không viết tắt
+    - Tên các trường dữ liệu viết bằng lowerCamelCase, không viết tắt
+    - Tên bảng, tên trường phải có ý nghĩa
+
+
+
+* Một số vấn đề nho nhỏ xiu xíu có thể được sửa:
+* Về việc đặt mã là varchar/nvarchar
+    - Việc đặt khóa chính là varchar/nvarchar là không nên.
+        - Lý do:
+            + Khó kiểm soát việc cập nhật(trùng lặp,...)
+            + Khóa chính là ký tự làm ảnh hưởng rất lớn tới tốc độ truy xuất trên khóa chính đó so với int
+        - Giải quyết:
+            + Đặt khóa chính là int như bình thường, auto_increment
+            + Thêm một cột khóa dùng để in ấn (Mã in ấn) được calculate từ khóa chính
+            + cột mã tính phải đặt persisted nếu không sẽ có vấn đề về hiệu năng
+        - Vấn đề liên quan:
+            + Có những bảng, trường trong bảng nào cần khóa tính toán?
+* Lịch sử địa chỉ liên hệ
+    - Theo hệ thống hiện tại, lịch sử địa chỉ liên hệ của một giáo viên đang lưu thời gian bắt đầu và thời gian kết thúc
+        - Giải quyết:
+            + Có thật sự cần thiết phải lưu 2 trường datetime -> tốn nhiều bộ nhớ
+            + Lưu datetime có hợp lý không khi việc xác định thời gian chính xác thay đổi là khó
+            + Do dữ liệu thời gian địa chỉ không có sự thay đổi nhiềug
+            + Nếu lưu, có thể đổi thành chỉ lưu năm thay vì lưu cả ngày tháng.
+            + Hoặc có thể lưu thêm 1 bit xác định lịch sử địa chỉ hiện tại thay vì lưu thời gian
+* Thời gian hoạt động của giáo viên
+    - Theo hệ thống hiện tại, một giáo viên được lưu:
+        GiaoVien(maGiaoVien*, maBoMon, tenGiaoVien, queQuan, gioiTinh, ngaySinh, thangSinh, namSinh, ngayBatDau, ngayKetThuc)
+    - ngayBatDau và ngayKetThuc là ngày bắt đầu hoạt động của giáo viên và ngày kết thúc của giáo viên.
+    - Việc lưu như trên không đảm bảo kiểm soát được toàn bộ thời gian hoạt động của một giáo viên (giáo viên có thể nghỉ một thời gian
+    chuyển công tác rồi quay trở lại...)
+        - Giải quyết:
+            + Tạo một lịch sử hoạt động cho giáo viên, có tgian bắt đầu, kết thúc.
+            + Giáo viên sẽ có quan hệ 1-n với lịch sử hoạt động
+
+* Phân công giáo viên:
+    - Theo hệ thống hiện tại, việc phân công giáo viên không có kiểm soát thời gian tải của giáo viên
+
+* Mở rộng lưu mục 10, 11, 12, 13 (03_MauLyLichKhoaHoc)
